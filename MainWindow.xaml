@@ -1,0 +1,38 @@
+﻿<Window x:Class="SecretSantaProject.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SecretSantaProject"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom" Margin="7">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Prenom :"/>
+                <Label Content="Nom :" Grid.Column="1"/>
+                <TextBox Grid.Row="1" Grid.Column="0" Name="NewUser_FirstName" Margin="2"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Name="NewUser_LastName" Margin="2"/>
+            </Grid>
+            <Button Margin="5" Content="Ajouter Participant" Name="BT_Add_Member" Click="BT_Add_Member_Click"/>
+            <Button Content="Supprimer particiapent" Name="BT_Delete_Member" Click="BT_Delete_Member_Click"/>
+            <Button Margin="5" Content="RAZ" Name="BT_RAZ_Members" Click="BT_RAZ_Members_Click"/>
+        </StackPanel>
+        <ListView Name="MemberList">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Participants" Width="200" DisplayMemberBinding="{Binding CompleteName}"/>
+                    <GridViewColumn Header="Est le père noel secret de" DisplayMemberBinding="{Binding Target.CompleteName}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </DockPanel>
+</Window>
