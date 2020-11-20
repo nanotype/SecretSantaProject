@@ -1,18 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SecretSantaProject
 {
@@ -26,18 +17,16 @@ namespace SecretSantaProject
 		public MainWindow()
 		{
 			InitializeComponent();
-			MemberList.ItemsSource = Members;
+			DG_MemberList.ItemsSource = Members;
 		}
 
 		private void BT_Add_Member_Click(object sender, RoutedEventArgs e)
 		{
 			string prenom = NewUser_FirstName.Text;
-			string nom = NewUser_LastName.Text;
 			if(prenom != "")
 			{
-				Members.Add(new Member(prenom, nom).MAJ());
+				Members.Add(new Member(prenom).MAJ("Member"));
 				NewUser_FirstName.Clear();
-				NewUser_LastName.Clear();
 			}
 			else
 			{
@@ -53,10 +42,72 @@ namespace SecretSantaProject
 
 		private void BT_Delete_Member_Click(object sender, RoutedEventArgs e)
 		{
-			if(MemberList.SelectedItem != null)
+			if(DG_MemberList.SelectedItem != null)
 			{
-				Members.Remove(MemberList.SelectedItem as Member);
+				Members.Remove(DG_MemberList.SelectedItem as Member);
 			}
+		}
+
+		private void Rollback()
+		{
+			foreach (Member member in Members)
+			{
+				member.Target = null;
+				member.MAJ("Target");
+			}
+		}
+
+		private void BT_Generate_SecretSanta_Click(object sender, RoutedEventArgs e)
+		{
+			if(Members.Count > 1)
+			{
+				Random random = new Random();
+
+				// affectation
+				ArrayList memberToDispatch = new ArrayList(Members);
+				foreach (Member member in Members)
+				{
+					int randomMemberIndex = random.Next(0, memberToDispatch.Count);
+					Member randomMember = memberToDispatch[randomMemberIndex] as Member;
+					member.Target = randomMember;
+					memberToDispatch.RemoveAt(randomMemberIndex);
+					member.MAJ("Target");
+				}
+
+				// Vérification
+				foreach (Member member in Members)
+				{
+					//Correction
+					if (member.Target.Equals(member))// Si un participant est son propre père noel
+					{
+						int indexNewTarget;
+						int indexMemberInError = Members.IndexOf(member);
+						
+						// Recherche index valide
+						do
+						{
+							indexNewTarget = random.Next(0, Members.Count);
+						} while (indexMemberInError == indexNewTarget);
+
+						// Echange des pères noel
+						member.Target = Members[indexNewTarget].Target;
+						member.MAJ("Target");
+
+						Members[indexNewTarget].Target = member;
+						Members[indexNewTarget].MAJ("Target");
+					}
+				}
+			}
+		}
+
+		private void BT_Rollback_Members_Click(object sender, RoutedEventArgs e)
+		{
+			Rollback();
+		}
+
+		private void Menu_ExportAs_txt_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }
