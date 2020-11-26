@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Input;
+using System.Windows.Controls;
+using System.IO;
 
 namespace SecretSantaProject
 {
@@ -12,6 +14,8 @@ namespace SecretSantaProject
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		public static bool Uncrypted { get; set; } = false;
+
 		private ObservableCollection<Member> Members = new ObservableCollection<Member>();
 
 		public MainWindow()
@@ -22,16 +26,17 @@ namespace SecretSantaProject
 
 		private void BT_Add_Member_Click(object sender, RoutedEventArgs e)
 		{
-			string prenom = NewUser_FirstName.Text;
-			if(prenom != "")
+			string name = NewUser_Name.Text;
+			if(name != "")
 			{
-				Members.Add(new Member(prenom).MAJ("Member"));
-				NewUser_FirstName.Clear();
+				Members.Add(new Member(name));
+				NewUser_Name.BorderBrush = new SolidColorBrush(Colors.Silver);
+				NewUser_Name.Clear();
 			}
 			else
 			{
 				MessageBox.Show("Erreur système couche 8 !!!");
-				NewUser_FirstName.BorderBrush = new SolidColorBrush(Colors.Red);
+				NewUser_Name.BorderBrush = new SolidColorBrush(Colors.Red);
 			}
 		}
 
@@ -107,7 +112,72 @@ namespace SecretSantaProject
 
 		private void Menu_ExportAs_txt_Click(object sender, RoutedEventArgs e)
 		{
+			var folderSelection = new System.Windows.Forms.FolderBrowserDialog();
+			folderSelection.ShowDialog();
+			if (!Directory.Exists(folderSelection.SelectedPath))//Si le dossier de destination n'existe pas
+			{
+				Generation(folderSelection.SelectedPath);
+			}
+			else//si le dossier existe déjà
+			{
+				MessageBoxResult warningDialogResult = MessageBox.Show("Attention !!!\n\nLa génération supprimera le contenu du dossier.\nVoulez vous continuez ?", "Warning : Génération du Secret Santa", MessageBoxButton.YesNo);
+				if (warningDialogResult.Equals(MessageBoxResult.Yes))
+				{
+					Generation(folderSelection.SelectedPath);
+				}
+			}
+		}
 
+		private void Generation(string path)
+		{
+			Directory.CreateDirectory(path);
+		}
+
+		private void MemberList_Encryption_Click(object sender, RoutedEventArgs e)
+		{
+			foreach (Member member in Members)
+			{
+				member.MAJ("Target");
+			}
+		}
+
+		private void NewUser_FirstName_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Enter:
+					string name = NewUser_Name.Text;
+					if (name != "")
+					{
+						Members.Add(new Member(name));
+						NewUser_Name.BorderBrush = new SolidColorBrush(Colors.Silver);
+						NewUser_Name.Clear();
+					}
+					break;
+
+				case Key.Escape:
+					NewUser_Name.Clear();
+					NewUser_Name.BorderBrush = new SolidColorBrush(Colors.Silver);
+					break;
+			}
+		}
+
+		private void DG_MemberList_CellEditEnding(object sender, System.Windows.Controls.DataGridCellEditEndingEventArgs e)
+		{
+			if (e.EditAction == DataGridEditAction.Commit)
+			{
+				// récupération des données de la DataGrid
+				Member memberToUpdate = e.EditingElement.DataContext as Member;
+				string newMemberName = (e.EditingElement as TextBox).Text;
+
+				//si on a un nom défférent par rapport aux données d'origine
+				if (memberToUpdate.Name != newMemberName)
+				{
+					int updatedMemberIndex = Members.IndexOf(memberToUpdate);//récupération de l'index du membre dans la liste
+					Members[updatedMemberIndex].Name = newMemberName;//mise à jour du nom
+					Members[updatedMemberIndex].MAJ("EncryptedName");//mise à jour interface
+				}
+			}
 		}
 	}
 }

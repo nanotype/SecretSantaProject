@@ -5,6 +5,10 @@ namespace SecretSantaProject
 	class Member : INotifyPropertyChanged
 	{
 		public string Name { get; set; }
+		public string EncryptedName
+		{
+			get => (MainWindow.Uncrypted) ? Name : "*****";
+		}
 		public Member Target { get; set; }
 
 		public Member(string firstName, Member target = null)

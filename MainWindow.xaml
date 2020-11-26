@@ -14,7 +14,7 @@
 					<ColumnDefinition Width="*"/>
 				</Grid.ColumnDefinitions>
 				<Label Content="Nom du participant :"/>
-				<TextBox Grid.Column="1" Name="NewUser_FirstName" Margin="2"/>
+				<TextBox Grid.Column="1" Name="NewUser_Name" Margin="2" KeyDown="NewUser_FirstName_KeyDown" BorderBrush="#FFABADB3"/>
 			</Grid>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Margin="5" Content="Ajouter Participant" Name="BT_Add_Member" Click="BT_Add_Member_Click"/>
@@ -29,13 +29,13 @@
 				</Menu>
                 <GridSplitter Width="2" Background="Silver"/>
                 <Label Content="décrypter :"/>
-                <ToggleButton Width="50" Height="20"/>
+                <ToggleButton x:Name="MemberList_Encryption" Width="50" Height="20" IsChecked="{Binding Uncrypted, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}" Click="MemberList_Encryption_Click"/>
             </StackPanel>
 		</StackPanel>
-		<DataGrid Name="DG_MemberList" AutoGenerateColumns="False">
+		<DataGrid Name="DG_MemberList" AutoGenerateColumns="False" CellEditEnding="DG_MemberList_CellEditEnding">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Participants" Binding="{Binding Name, Mode=TwoWay}"/>
-				<DataGridTextColumn Header="Est le père noel secret de" Binding="{Binding Target.Name}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Est le père noel secret de" Binding="{Binding Target.EncryptedName}" IsReadOnly="True"/>
 			</DataGrid.Columns>
 		</DataGrid>
 	</DockPanel>
