@@ -114,16 +114,19 @@ namespace SecretSantaProject
 		{
 			var folderSelection = new System.Windows.Forms.FolderBrowserDialog();
 			folderSelection.ShowDialog();
-			if (!Directory.Exists(folderSelection.SelectedPath))//Si le dossier de destination n'existe pas
+			if(folderSelection.SelectedPath != null)
 			{
-				Generation(folderSelection.SelectedPath);
-			}
-			else//si le dossier existe déjà
-			{
-				MessageBoxResult warningDialogResult = MessageBox.Show("Attention !!!\n\nLa génération supprimera le contenu du dossier.\nVoulez vous continuez ?", "Warning : Génération du Secret Santa", MessageBoxButton.YesNo);
-				if (warningDialogResult.Equals(MessageBoxResult.Yes))
+				if (!Directory.Exists(folderSelection.SelectedPath))//Si le dossier de destination n'existe pas
 				{
 					Generation(folderSelection.SelectedPath);
+				}
+				else//si le dossier existe déjà
+				{
+					MessageBoxResult warningDialogResult = MessageBox.Show("Attention !!!\n\nLa génération supprimera le contenu du dossier.\nVoulez vous continuez ?", "Warning : Génération du Secret Santa", MessageBoxButton.YesNo);
+					if (warningDialogResult.Equals(MessageBoxResult.Yes))
+					{
+						Generation(folderSelection.SelectedPath);
+					}
 				}
 			}
 		}
@@ -162,7 +165,7 @@ namespace SecretSantaProject
 			}
 		}
 
-		private void DG_MemberList_CellEditEnding(object sender, System.Windows.Controls.DataGridCellEditEndingEventArgs e)
+		private void DG_MemberList_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
 		{
 			if (e.EditAction == DataGridEditAction.Commit)
 			{
