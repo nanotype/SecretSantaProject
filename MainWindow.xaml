@@ -32,7 +32,7 @@
                 <ToggleButton x:Name="MemberList_Encryption" Width="50" Height="20" IsChecked="{Binding Uncrypted, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}" Click="MemberList_Encryption_Click"/>
             </StackPanel>
 		</StackPanel>
-		<DataGrid Name="DG_MemberList" AutoGenerateColumns="False" CellEditEnding="DG_MemberList_CellEditEnding">
+		<DataGrid Name="DG_MemberList" AutoGenerateColumns="False" CellEditEnding="DG_MemberList_CellEditEnding" RowEditEnding="DG_MemberList_RowEditEnding">
 			<DataGrid.Columns>
 				<DataGridTextColumn Header="Participants" Binding="{Binding Name, Mode=TwoWay}"/>
                 <DataGridTextColumn Header="Est le père noel secret de" Binding="{Binding Target.EncryptedName}" IsReadOnly="True"/>

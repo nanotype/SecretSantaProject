@@ -15,6 +15,7 @@ namespace SecretSantaProject
 	public partial class MainWindow : Window
 	{
 		public static bool Uncrypted { get; set; } = false;
+		public bool SecretSantaGenerated { get; set; } = false;
 
 		private ObservableCollection<Member> Members = new ObservableCollection<Member>();
 
@@ -27,7 +28,7 @@ namespace SecretSantaProject
 		private void BT_Add_Member_Click(object sender, RoutedEventArgs e)
 		{
 			string name = NewUser_Name.Text;
-			if(name != "")
+			if (name != "")
 			{
 				Members.Add(new Member(name));
 				NewUser_Name.BorderBrush = new SolidColorBrush(Colors.Silver);
@@ -47,7 +48,7 @@ namespace SecretSantaProject
 
 		private void BT_Delete_Member_Click(object sender, RoutedEventArgs e)
 		{
-			if(DG_MemberList.SelectedItem != null)
+			if (DG_MemberList.SelectedItem != null)
 			{
 				Members.Remove(DG_MemberList.SelectedItem as Member);
 			}
@@ -60,11 +61,12 @@ namespace SecretSantaProject
 				member.Target = null;
 				member.MAJ("Target");
 			}
+			SecretSantaGenerated = false;
 		}
 
-		private void BT_Generate_SecretSanta_Click(object sender, RoutedEventArgs e)
+		private void GenerateSecretSanta()
 		{
-			if(Members.Count > 1)
+			if (Members.Count > 1)
 			{
 				Random random = new Random();
 
@@ -87,7 +89,7 @@ namespace SecretSantaProject
 					{
 						int indexNewTarget;
 						int indexMemberInError = Members.IndexOf(member);
-						
+
 						// Recherche index valide
 						do
 						{
@@ -103,6 +105,12 @@ namespace SecretSantaProject
 					}
 				}
 			}
+			SecretSantaGenerated = true;
+		}
+
+		private void BT_Generate_SecretSanta_Click(object sender, RoutedEventArgs e)
+		{
+			GenerateSecretSanta();
 		}
 
 		private void BT_Rollback_Members_Click(object sender, RoutedEventArgs e)
@@ -112,28 +120,39 @@ namespace SecretSantaProject
 
 		private void Menu_ExportAs_txt_Click(object sender, RoutedEventArgs e)
 		{
+			SetupGeneration(GenerationType.txt);
+		}
+
+		private void SetupGeneration(GenerationType generationType)
+		{
 			var folderSelection = new System.Windows.Forms.FolderBrowserDialog();
 			folderSelection.ShowDialog();
-			if(folderSelection.SelectedPath != null)
+			if (folderSelection.SelectedPath != "")// Si on a sélectionné un chemin de destination
 			{
-				if (!Directory.Exists(folderSelection.SelectedPath))//Si le dossier de destination n'existe pas
-				{
-					Generation(folderSelection.SelectedPath);
-				}
-				else//si le dossier existe déjà
-				{
-					MessageBoxResult warningDialogResult = MessageBox.Show("Attention !!!\n\nLa génération supprimera le contenu du dossier.\nVoulez vous continuez ?", "Warning : Génération du Secret Santa", MessageBoxButton.YesNo);
-					if (warningDialogResult.Equals(MessageBoxResult.Yes))
-					{
-						Generation(folderSelection.SelectedPath);
-					}
-				}
+				if (!SecretSantaGenerated)
+					GenerateSecretSanta();
+				Directory.CreateDirectory(folderSelection.SelectedPath);
+				Generation(generationType, folderSelection.SelectedPath);
 			}
 		}
 
-		private void Generation(string path)
+		private void Generation(GenerationType generationType, string generationPath)
 		{
-			Directory.CreateDirectory(path);
+			switch (generationType)
+			{
+				case GenerationType.txt:
+					GenerationTXT(generationPath);
+					break;
+			}
+		}
+
+		private void GenerationTXT(string generationPath)
+		{
+			foreach (Member member in Members)
+			{
+				string fileGenerated = $"{generationPath}{member.Name}.txt";
+				File.WriteAllText(fileGenerated, member.Target.Name);
+			}
 		}
 
 		private void MemberList_Encryption_Click(object sender, RoutedEventArgs e)
