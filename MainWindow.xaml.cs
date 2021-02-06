@@ -6,6 +6,8 @@ using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Controls;
 using System.IO;
+using System.Xml.Linq;
+using Microsoft.Win32;
 
 namespace SecretSantaProject
 {
@@ -200,6 +202,63 @@ namespace SecretSantaProject
 					Members[updatedMemberIndex].MAJ("EncryptedName");//mise à jour interface
 				}
 			}
+		}
+
+		private string PointedFile()
+		{
+			string targetPath = "C:/";
+
+			return targetPath;
+		}
+
+		private bool Save(string targetPath)
+		{
+			try
+			{
+				XDocument xmlDocument = new XDocument();
+				foreach (Member member in Members)
+				{
+					xmlDocument.Root.Add(member);
+				}
+				SaveFileDialog saveFileDialog = new SaveFileDialog
+				{
+					Filter = "Xml file (*.xml)|*.txt"
+				};
+				if (saveFileDialog.ShowDialog() == true)
+				{
+					xmlDocument.Save(targetPath);
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+				return false;
+			}
+			return true;
+		}
+
+		private bool Load()
+		{
+			try
+			{
+
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+				return false;
+			}
+			return true;
+		}
+
+		private void MainMenu_Save_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void MainMenu_Load_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }

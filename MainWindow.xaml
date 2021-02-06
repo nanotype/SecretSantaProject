@@ -7,6 +7,12 @@
 		mc:Ignorable="d"
 		Title="MainWindow" Height="450" Width="800">
 	<DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_Menu">
+                <MenuItem Name="MainMenu_Save" Header="_Sauvegarder" Click="MainMenu_Save_Click"/>
+                <MenuItem Name="MainMenu_Load" Header="_Charger" Click="MainMenu_Load_Click"/>
+            </MenuItem>
+        </Menu>
 		<StackPanel DockPanel.Dock="Bottom" Margin="7">
 			<Grid>
 				<Grid.ColumnDefinitions>
