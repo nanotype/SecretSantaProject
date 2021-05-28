@@ -50,9 +50,15 @@ namespace SecretSantaProject
 
 		private void BT_Delete_Member_Click(object sender, RoutedEventArgs e)
 		{
-			if (DG_MemberList.SelectedItem != null)
+			if (DG_MemberList.SelectedItems != null)
 			{
-				Members.Remove(DG_MemberList.SelectedItem as Member);
+				int nbMemberDeleted = 0;
+				while (DG_MemberList.SelectedItems.Count > 0)
+				{
+					Members.Remove(DG_MemberList.SelectedItem as Member);
+					nbMemberDeleted++;
+				}
+				Console.WriteLine($"Members deleted : {nbMemberDeleted}");
 			}
 		}
 
@@ -152,7 +158,7 @@ namespace SecretSantaProject
 		{
 			foreach (Member member in Members)
 			{
-				string fileGenerated = $"{generationPath}{member.Name}.txt";
+				string fileGenerated = $"{generationPath}/{member.Name}.txt";
 				File.WriteAllText(fileGenerated, member.Target.Name);
 			}
 		}
