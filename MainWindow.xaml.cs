@@ -21,12 +21,21 @@ namespace SecretSantaProject
 
 		private ObservableCollection<Member> Members = new ObservableCollection<Member>();
 
+		/// <summary>
+		/// Constructeur de la fenetre principale
+		/// </summary>
 		public MainWindow()
 		{
 			InitializeComponent();
-			DG_MemberList.ItemsSource = Members;
+			DG_MemberList.ItemsSource = Members;// Liaison entre le tableau et la liste des membres
 		}
 
+		/// <summary>
+		/// Lance l'action d'ajout d'un nouveau membre
+		/// Rattachée au bouton BT_Add_Member
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void BT_Add_Member_Click(object sender, RoutedEventArgs e)
 		{
 			string name = NewUser_Name.Text;
@@ -43,11 +52,23 @@ namespace SecretSantaProject
 			}
 		}
 
+		/// <summary>
+		/// Lance l'action de remise à zéro des données
+		/// Rattachée au bouton BT_RAZ_Members
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void BT_RAZ_Members_Click(object sender, RoutedEventArgs e)
 		{
 			Members.Clear();
 		}
 
+		/// <summary>
+		/// Lance l'action de suppression d'un utilisateur
+		/// Rattachée au bouton BT_Delete_Member
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void BT_Delete_Member_Click(object sender, RoutedEventArgs e)
 		{
 			if (DG_MemberList.SelectedItems != null)
@@ -62,6 +83,9 @@ namespace SecretSantaProject
 			}
 		}
 
+		/// <summary>
+		/// Permet de remettre à zéro les affectations des utilisateurs
+		/// </summary>
 		private void Rollback()
 		{
 			foreach (Member member in Members)
@@ -72,6 +96,9 @@ namespace SecretSantaProject
 			SecretSantaGenerated = false;
 		}
 
+		/// <summary>
+		/// Permet de générer le secret santa
+		/// </summary>
 		private void GenerateSecretSanta()
 		{
 			if (Members.Count > 1)
@@ -112,25 +139,53 @@ namespace SecretSantaProject
 						Members[indexNewTarget].MAJ("Target");
 					}
 				}
+				SecretSantaGenerated = true;
 			}
-			SecretSantaGenerated = true;
+			else
+			{
+				MessageBox.Show("Erreur système couche 8 !!!");
+			}
 		}
 
+		/// <summary>
+		/// Lance l'action de génération du Secret Santa
+		/// Rattachée au bouton BT_Generate_SecretSanta
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void BT_Generate_SecretSanta_Click(object sender, RoutedEventArgs e)
 		{
 			GenerateSecretSanta();
 		}
 
+		/// <summary>
+		/// Lance l'action de mise à zéro des affectations
+		/// Rattachée au bouton BT_Rollback_Members
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void BT_Rollback_Members_Click(object sender, RoutedEventArgs e)
 		{
 			Rollback();
 		}
 
+		/// <summary>
+		/// Lance l'export du secret santa généré
+		/// Rattachée au bouton Menu_ExportAs_txt
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void Menu_ExportAs_txt_Click(object sender, RoutedEventArgs e)
 		{
 			SetupGeneration(GenerationType.txt);
 		}
 
+		/// <summary>
+		/// Première étape de l'export
+		/// Permet de choisir l'emplacement un export du résultat du secret santa
+		/// Le type de fichier de sortie est géré en fonction du paramètre d'entré
+		/// </summary>
+		/// <param name="generationType">Element de l'énum <see cref="GenerationType"/></param>
 		private void SetupGeneration(GenerationType generationType)
 		{
 			var folderSelection = new System.Windows.Forms.FolderBrowserDialog();
@@ -144,6 +199,12 @@ namespace SecretSantaProject
 			}
 		}
 
+		/// <summary>
+		/// Seconde etape de l'export
+		/// Permet de choisir quelle fonction lancer en fonction du type d'export lancé
+		/// </summary>
+		/// <param name="generationType">Element de l'énum <see cref="GenerationType"/></param>
+		/// <param name="generationPath">Chemin du dossier cible pour la sauvegarde</param>
 		private void Generation(GenerationType generationType, string generationPath)
 		{
 			switch (generationType)
@@ -154,6 +215,11 @@ namespace SecretSantaProject
 			}
 		}
 
+		/// <summary>
+		/// Dernière étape de l'export
+		/// Permet de réaliser l'export txt
+		/// </summary>
+		/// <param name="generationPath">Chemin du dossier cible pour la sauvegarde</param>
 		private void GenerationTXT(string generationPath)
 		{
 			foreach (Member member in Members)
@@ -163,6 +229,12 @@ namespace SecretSantaProject
 			}
 		}
 
+		/// <summary>
+		/// Lance l'action de cryptage/décryptage de la colonne des affectations
+		/// Rattachée au bouton MemberList_Encryption
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MemberList_Encryption_Click(object sender, RoutedEventArgs e)
 		{
 			foreach (Member member in Members)
@@ -171,7 +243,13 @@ namespace SecretSantaProject
 			}
 		}
 
-		private void NewUser_FirstName_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+		/// <summary>
+		/// Lance l'action de gestion des raccourci clavier du champs textuel de l'ajout de nouveau utilisateur
+		/// Rattachée au champs NewUser_FirstName
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void NewUser_FirstName_KeyDown(object sender, KeyEventArgs e)
 		{
 			switch (e.Key)
 			{
@@ -192,6 +270,12 @@ namespace SecretSantaProject
 			}
 		}
 
+		/// <summary>
+		/// Lance l'action de gestion de fin d'édition de cellule
+		/// Rattachée à l'évènement de fin d'édition de cellule de la datagrid DG_MemberList
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void DG_MemberList_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
 		{
 			if (e.EditAction == DataGridEditAction.Commit)
@@ -210,6 +294,10 @@ namespace SecretSantaProject
 			}
 		}
 
+		/// <summary>
+		/// Permet de pointer un fichier précis
+		/// </summary>
+		/// <returns></returns>
 		private string PointedFile()
 		{
 			string targetPath = "C:/";
@@ -217,6 +305,11 @@ namespace SecretSantaProject
 			return targetPath;
 		}
 
+		/// <summary>
+		/// Permet de sauvegarder le secret santa dans un fichier xml
+		/// </summary>
+		/// <param name="targetPath"></param>
+		/// <returns></returns>
 		private bool Save(string targetPath)
 		{
 			try
@@ -243,6 +336,10 @@ namespace SecretSantaProject
 			return true;
 		}
 
+		/// <summary>
+		/// permet de charger un secret santa depuis un xml
+		/// </summary>
+		/// <returns></returns>
 		private bool Load()
 		{
 			try
@@ -257,11 +354,23 @@ namespace SecretSantaProject
 			return true;
 		}
 
+		/// <summary>
+		/// lance l'action de sauvegarde du secret santa
+		/// rattaché au clic sur le menu MainMenu_Save
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MainMenu_Save_Click(object sender, RoutedEventArgs e)
 		{
 
 		}
 
+		/// <summary>
+		/// lance l'action de chargement du secret santa
+		/// rattaché au clic sur le menu MainMenu_Load
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void MainMenu_Load_Click(object sender, RoutedEventArgs e)
 		{
 

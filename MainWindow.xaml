@@ -27,7 +27,7 @@
 				<Button Margin="5" Content="Supprimer participant" Name="BT_Delete_Member" Click="BT_Delete_Member_Click"/>
 				<Button Margin="5" Content="Rollback" Name="BT_Rollback_Members" Click="BT_Rollback_Members_Click"/>
 				<Button Margin="5" Content="RAZ" Name="BT_RAZ_Members" Click="BT_RAZ_Members_Click"/>
-				<Button Margin="5" Content="Do a barrel roll !!!" Name="BT_Generate_SecretSanta" Click="BT_Generate_SecretSanta_Click"/>
+				<Button Margin="5" Content="Générer" Name="BT_Generate_SecretSanta" Click="BT_Generate_SecretSanta_Click"/>
 				<Menu Margin="5" Name="Menu_ExportAs" BorderBrush="Black" BorderThickness="1">
                     <MenuItem Header="Exporter sous ...">
                         <MenuItem Header="txt" Name="Menu_ExportAs_txt" Click="Menu_ExportAs_txt_Click"/>
@@ -40,7 +40,7 @@
 		</StackPanel>
 		<DataGrid Name="DG_MemberList" AutoGenerateColumns="False" CellEditEnding="DG_MemberList_CellEditEnding">
 			<DataGrid.Columns>
-				<DataGridTextColumn Header="Participants" Binding="{Binding Name, Mode=TwoWay}" Width="*"/>
+				<DataGridTextColumn Header="Le participant" Binding="{Binding Name, Mode=TwoWay}" Width="*"/>
                 <DataGridTextColumn Header="Est le père noel secret de" Binding="{Binding Target.EncryptedName}" IsReadOnly="True" Width="*"/>
 			</DataGrid.Columns>
 		</DataGrid>
