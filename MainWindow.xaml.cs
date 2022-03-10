@@ -16,10 +16,20 @@ namespace SecretSantaProject
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		/// <summary>
+		/// Défini l'affichage de la données en clair ou non
+		/// </summary>
 		public static bool Uncrypted { get; set; } = false;
-		public bool SecretSantaGenerated { get; set; } = false;
 
-		private ObservableCollection<Member> Members = new ObservableCollection<Member>();
+		/// <summary>
+		/// Défini si le secret santa à été généré
+		/// </summary>
+		private bool SecretSantaGenerated { get; set; } = false;
+
+		/// <summary>
+		/// Liste des membres participant au Secret Santa
+		/// </summary>
+		private readonly ObservableCollection<Member> Members = new ObservableCollection<Member>();
 
 		/// <summary>
 		/// Constructeur de la fenetre principale
@@ -27,7 +37,9 @@ namespace SecretSantaProject
 		public MainWindow()
 		{
 			InitializeComponent();
-			DG_MemberList.ItemsSource = Members;// Liaison entre le tableau et la liste des membres
+
+			// Liaison entre le tableau et la liste des membres
+			DG_MemberList.ItemsSource = Members;
 		}
 
 		/// <summary>
@@ -39,15 +51,17 @@ namespace SecretSantaProject
 		private void BT_Add_Member_Click(object sender, RoutedEventArgs e)
 		{
 			string name = NewUser_Name.Text;
-			if (name != "")
+			
+			// Si le champ est conforme
+			if (!string.IsNullOrWhiteSpace(name))
 			{
+				// Ajout membre
 				Members.Add(new Member(name));
 				NewUser_Name.BorderBrush = new SolidColorBrush(Colors.Silver);
 				NewUser_Name.Clear();
 			}
 			else
 			{
-				MessageBox.Show("Erreur système couche 8 !!!");
 				NewUser_Name.BorderBrush = new SolidColorBrush(Colors.Red);
 			}
 		}
@@ -101,26 +115,36 @@ namespace SecretSantaProject
 		/// </summary>
 		private void GenerateSecretSanta()
 		{
+			// si pas assez de membre, on ne lance aucun traitement
 			if (Members.Count > 1)
 			{
 				Random random = new Random();
 
-				// affectation
+				#region Affectation
+				// copie de la liste des membres dans une liste de travail
 				ArrayList memberToDispatch = new ArrayList(Members);
+
 				foreach (Member member in Members)
 				{
+					// récupération aléatoire d'un membre à affecter au membre actif
 					int randomMemberIndex = random.Next(0, memberToDispatch.Count);
 					Member randomMember = memberToDispatch[randomMemberIndex] as Member;
+
+					// Affectation du secret santa
 					member.Target = randomMember;
+
+					//suppression du membre affecté de la liste des membre disponible
 					memberToDispatch.RemoveAt(randomMemberIndex);
+
 					member.MAJ("Target");
 				}
+				#endregion
 
-				// Vérification
+				#region Vérification
 				foreach (Member member in Members)
 				{
-					//Correction
-					if (member.Target.Equals(member))// Si un participant est son propre père noel
+					// Si un participant est son propre secret santa
+					if (member.Target.Equals(member))
 					{
 						int indexNewTarget;
 						int indexMemberInError = Members.IndexOf(member);
@@ -133,12 +157,15 @@ namespace SecretSantaProject
 
 						// Echange des pères noel
 						member.Target = Members[indexNewTarget].Target;
-						member.MAJ("Target");
-
 						Members[indexNewTarget].Target = member;
+
+						// Mise à jour interface
+						member.MAJ("Target");
 						Members[indexNewTarget].MAJ("Target");
 					}
 				}
+				#endregion
+
 				SecretSantaGenerated = true;
 			}
 			else
@@ -193,7 +220,10 @@ namespace SecretSantaProject
 			if (folderSelection.SelectedPath != "")// Si on a sélectionné un chemin de destination
 			{
 				if (!SecretSantaGenerated)
+				{
 					GenerateSecretSanta();
+				}
+
 				Directory.CreateDirectory(folderSelection.SelectedPath);
 				Generation(generationType, folderSelection.SelectedPath);
 			}
@@ -372,6 +402,11 @@ namespace SecretSantaProject
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void MainMenu_Load_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void MainMenu_Quit_Click(object sender, RoutedEventArgs e)
 		{
 
 		}

@@ -20,7 +20,7 @@ namespace SecretSantaProject
 		}
 
 		/// <summary>
-		/// permet de préciser la valeur qui est mise à jour
+		/// permet de préciser la valeur qui est mise à jour et de mettre à jour l'interface
 		/// </summary>
 		/// <param name="element"></param>
 		/// <returns></returns>

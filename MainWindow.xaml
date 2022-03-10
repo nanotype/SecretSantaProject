@@ -11,6 +11,7 @@
             <MenuItem Header="_Menu">
                 <MenuItem Name="MainMenu_Save" Header="_Sauvegarder" Click="MainMenu_Save_Click"/>
                 <MenuItem Name="MainMenu_Load" Header="_Charger" Click="MainMenu_Load_Click"/>
+                <MenuItem Name="MainMenu_Quit" Header="_Quitter" Click="MainMenu_Quit_Click"/>
             </MenuItem>
         </Menu>
 		<StackPanel DockPanel.Dock="Bottom" Margin="7">
