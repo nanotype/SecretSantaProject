@@ -9,8 +9,9 @@
 	<DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_Menu">
-                <MenuItem Name="MainMenu_Save" Header="_Sauvegarder" Click="MainMenu_Save_Click"/>
                 <MenuItem Name="MainMenu_Load" Header="_Charger" Click="MainMenu_Load_Click"/>
+                <MenuItem Name="MainMenu_Save" Header="_Sauvegarder" Click="MainMenu_Save_Click" IsEnabled="{Binding ProjectFileLinked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}" />
+                <MenuItem Name="MainMenu_SaveAs" Header="_Enregistrer sous..." Click="MainMenu_SaveAs_Click"/>
                 <MenuItem Name="MainMenu_Quit" Header="_Quitter" Click="MainMenu_Quit_Click"/>
             </MenuItem>
         </Menu>

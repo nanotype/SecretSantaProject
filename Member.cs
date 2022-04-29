@@ -2,9 +2,10 @@
 
 namespace SecretSantaProject
 {
-	class Member : INotifyPropertyChanged
+	public class Member : INotifyPropertyChanged
 	{
 		public string Name { get; set; }
+		public string Mail { get; set; }
 		public string EncryptedName => MainWindow.Uncrypted ? Name : @"/!\ DONNEE CRYPTEE /!\";
 		public Member Target { get; set; }
 
@@ -13,9 +14,10 @@ namespace SecretSantaProject
 		/// </summary>
 		/// <param name="firstName"></param>
 		/// <param name="target"></param>
-		public Member(string firstName, Member target = null)
+		public Member(string firstName, string mail = "", Member target = null)
 		{
 			Name = firstName;
+			Mail = mail;
 			Target = target;
 		}
 

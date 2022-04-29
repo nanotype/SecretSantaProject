@@ -8,6 +8,8 @@ using System.Windows.Controls;
 using System.IO;
 using System.Xml.Linq;
 using Microsoft.Win32;
+using SecretSantaProject.Module;
+using System.Collections.Generic;
 
 namespace SecretSantaProject
 {
@@ -16,6 +18,8 @@ namespace SecretSantaProject
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		public bool ProjectFileLinked { get; set; } = SaveAndLoadSystem.FileProject != null ? SaveAndLoadSystem.FileProject.Exists : false;
+
 		/// <summary>
 		/// Défini l'affichage de la données en clair ou non
 		/// </summary>
@@ -29,7 +33,7 @@ namespace SecretSantaProject
 		/// <summary>
 		/// Liste des membres participant au Secret Santa
 		/// </summary>
-		private readonly ObservableCollection<Member> Members = new ObservableCollection<Member>();
+		private ObservableCollection<Member> Members = new ObservableCollection<Member>();
 
 		/// <summary>
 		/// Constructeur de la fenetre principale
@@ -367,24 +371,6 @@ namespace SecretSantaProject
 		}
 
 		/// <summary>
-		/// permet de charger un secret santa depuis un xml
-		/// </summary>
-		/// <returns></returns>
-		private bool Load()
-		{
-			try
-			{
-
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show(ex.Message);
-				return false;
-			}
-			return true;
-		}
-
-		/// <summary>
 		/// lance l'action de sauvegarde du secret santa
 		/// rattaché au clic sur le menu MainMenu_Save
 		/// </summary>
@@ -392,7 +378,7 @@ namespace SecretSantaProject
 		/// <param name="e"></param>
 		private void MainMenu_Save_Click(object sender, RoutedEventArgs e)
 		{
-
+			SaveAndLoadSystem.Save(new List<Member>(Members));
 		}
 
 		/// <summary>
@@ -403,12 +389,25 @@ namespace SecretSantaProject
 		/// <param name="e"></param>
 		private void MainMenu_Load_Click(object sender, RoutedEventArgs e)
 		{
-
+			List<Member> loadingMembers = SaveAndLoadSystem.Load();
+			if(loadingMembers != null)
+			{
+				Members.Clear();
+				foreach (Member member in loadingMembers)
+				{
+					Members.Add(member);
+				}
+			}
 		}
 
 		private void MainMenu_Quit_Click(object sender, RoutedEventArgs e)
 		{
 
+		}
+
+		private void MainMenu_SaveAs_Click(object sender, RoutedEventArgs e)
+		{
+			SaveAndLoadSystem.SaveAs(new List<Member>(Members));
 		}
 	}
 }
