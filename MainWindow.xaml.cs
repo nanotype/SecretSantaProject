@@ -305,30 +305,6 @@ namespace SecretSantaProject
 		}
 
 		/// <summary>
-		/// Lance l'action de gestion de fin d'édition de cellule
-		/// Rattachée à l'évènement de fin d'édition de cellule de la datagrid DG_MemberList
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void DG_MemberList_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
-		{
-			if (e.EditAction == DataGridEditAction.Commit)
-			{
-				// récupération des données de la DataGrid
-				Member memberToUpdate = e.EditingElement.DataContext as Member;
-				string newMemberName = (e.EditingElement as TextBox).Text;
-
-				//si on a un nom défférent par rapport aux données d'origine
-				if (memberToUpdate.Name != newMemberName)
-				{
-					int updatedMemberIndex = Members.IndexOf(memberToUpdate);//récupération de l'index du membre dans la liste
-					Members[updatedMemberIndex].Name = newMemberName;//mise à jour du nom
-					Members[updatedMemberIndex].MAJ("EncryptedName");//mise à jour interface
-				}
-			}
-		}
-
-		/// <summary>
 		/// Permet de pointer un fichier précis
 		/// </summary>
 		/// <returns></returns>
@@ -408,6 +384,11 @@ namespace SecretSantaProject
 		private void MainMenu_SaveAs_Click(object sender, RoutedEventArgs e)
 		{
 			SaveAndLoadSystem.SaveAs(new List<Member>(Members));
+		}
+
+		private void MainMenu_Mail_Click(object sender, RoutedEventArgs e)
+		{
+			_ = MailingSystem.SendMail(MailingSystem.UseGmail());
 		}
 	}
 }
